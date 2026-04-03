@@ -1,7 +1,10 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import "dotenv/config";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -152,7 +155,8 @@ async function main() {
   }
   console.log(`✅ Created ${inventoryItems.length} inventory items`);
 
-  // Create promos
+  // Create promos (clear existing first to avoid duplicates)
+  await prisma.promo.deleteMany({});
   const promos = [
     {
       title: "Ganti Oli Gratis Filter",

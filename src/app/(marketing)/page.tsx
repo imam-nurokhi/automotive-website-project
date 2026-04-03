@@ -2,13 +2,21 @@ import HeroSection from "@/components/marketing/HeroSection";
 import ServicesSection from "@/components/marketing/ServicesSection";
 import PromoSection from "@/components/marketing/PromoSection";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const promos = await prisma.promo
+    .findMany({
+      where: { isActive: true, validUntil: { gte: new Date() } },
+      orderBy: { createdAt: "desc" },
+    })
+    .catch(() => []);
+
   return (
     <>
       <HeroSection />
       <ServicesSection />
-      <PromoSection />
+      <PromoSection promos={promos} />
 
       {/* About section */}
       <section id="about" className="py-20 bg-gray-900 text-white">
