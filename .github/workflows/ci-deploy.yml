@@ -35,12 +35,12 @@ jobs:
 
       - name: Run Prisma Migrations
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DB_DIRECT_URL }}
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
         run: npx prisma migrate deploy
 
       - name: Seed Database
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DB_DIRECT_URL }}
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
         run: npm run db:seed
 
       - name: Deploy to Vercel
