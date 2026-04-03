@@ -46,7 +46,7 @@ export default function AddVehiclePage() {
       const data = await res.json();
       setError(data.error || "Gagal menambahkan kendaraan.");
     } else {
-      router.push("/dashboard");
+      router.push("/dashboard/vehicles");
       router.refresh();
     }
   };

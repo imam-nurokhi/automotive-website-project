@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/lib/auth";
+import PageTransition from "@/components/dashboard/PageTransition";
 
 export default async function DashboardLayout({
   children,
@@ -99,7 +100,7 @@ export default async function DashboardLayout({
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+        <PageTransition>{children}</PageTransition>
       </main>
     </div>
   );
