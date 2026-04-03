@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn, getSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -29,14 +29,7 @@ export default function LoginPage() {
     if (result?.error) {
       setError("Email atau password tidak valid.");
     } else {
-      // Get session to determine role-based redirect
-      const session = await getSession();
-      const role = (session?.user as { role?: string })?.role;
-      if (role === "ADMIN" || role === "MECHANIC") {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard");
-      }
+      router.push("/dashboard");
       router.refresh();
     }
   };

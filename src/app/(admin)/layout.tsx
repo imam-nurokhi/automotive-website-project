@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "@/lib/auth";
-import AdminPageTransition from "@/components/admin/AdminPageTransition";
 
 export default async function AdminLayout({
   children,
@@ -152,9 +151,7 @@ export default async function AdminLayout({
           </div>
         </header>
 
-        <main className="flex-1 p-6 overflow-auto">
-          <AdminPageTransition>{children}</AdminPageTransition>
-        </main>
+        <main className="flex-1 p-6 overflow-auto">{children}</main>
       </div>
     </div>
   );
