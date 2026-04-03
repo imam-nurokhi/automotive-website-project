@@ -1,18 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-
-const statusColors: Record<string, string> = {
-  PENDING: "bg-amber-100 text-amber-700",
-  IN_PROGRESS: "bg-blue-100 text-blue-700",
-  COMPLETED: "bg-green-100 text-green-700",
-  CANCELLED: "bg-gray-100 text-gray-600",
-};
-const statusLabels: Record<string, string> = {
-  PENDING: "Menunggu",
-  IN_PROGRESS: "Dalam Proses",
-  COMPLETED: "Selesai",
-  CANCELLED: "Dibatalkan",
-};
+import ServiceStatusUpdate from "@/components/admin/ServiceStatusUpdate";
 
 export default async function AdminServicesPage() {
   const services = await prisma.serviceRecord.findMany({
@@ -117,11 +105,7 @@ export default async function AdminServicesPage() {
                       <p className="truncate">{service.description}</p>
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <span
-                        className={`text-xs font-medium px-3 py-1 rounded-full ${statusColors[service.status]}`}
-                      >
-                        {statusLabels[service.status]}
-                      </span>
+                      <ServiceStatusUpdate id={service.id} currentStatus={service.status} />
                     </td>
                     <td className="px-4 py-3 text-right font-semibold text-gray-900 whitespace-nowrap">
                       Rp{" "}
