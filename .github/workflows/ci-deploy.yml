@@ -1,0 +1,52 @@
+name: CI — Migrate & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  preflight:
+    name: Install & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
+        run: npm run build
+
+  migrate_and_deploy:
+    name: Migrate, Seed & Deploy
+    needs: preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prisma Migrations
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_DIRECT_URL }}
+        run: npx prisma migrate deploy
+
+      - name: Seed Database
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_DIRECT_URL }}
+        run: npm run db:seed
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
